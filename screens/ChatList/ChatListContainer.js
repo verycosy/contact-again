@@ -28,6 +28,7 @@ export default class extends React.Component {
           const lastLine = lines[lines.length - 2].split(reg);
 
           const who = {
+            path: textFilePath,
             name: lines[0].replace(" 님과 카카오톡 대화", ""),
             lastTime: `${lastLine[4]} ${lastLine[5]}:${lastLine[6]}`,
             lastMessage: lastLine[7].substring(2)

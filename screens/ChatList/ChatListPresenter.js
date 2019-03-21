@@ -16,6 +16,7 @@ const ChatListPresenter = ({ loading, chatList }) =>
         ? chatList.map(chat => (
             <ChatListTalk
               key={UUID()}
+              path={chat.path}
               name={chat.name}
               lastTime={chat.lastTime}
               lastMessage={chat.lastMessage}

@@ -7,7 +7,7 @@ import ChatListWho from "./ChatListWho";
 import ChatListLastMessage from "./ChatListLastMessage";
 import ChatListLastTime from "./ChatListTime";
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   padding: 10px;
 `;
 
@@ -16,8 +16,12 @@ const ContainerTop = styled.View`
   flex-direction: row;
 `;
 
-const ChatListTalk = ({ name, lastTime, lastMessage }) => (
-  <Container>
+const ChatListTalk = ({ name, lastTime, lastMessage, navigation, path }) => (
+  <Container
+    onPress={() =>
+      navigation.navigate({ routeName: "Chat", params: { name, path } })
+    }
+  >
     <ContainerTop>
       <ChatListWho name={name} />
       <ChatListLastTime lastTime={lastTime} />
@@ -31,4 +35,4 @@ ChatListTalk.propTypes = {
   lastMessage: PropTypes.string.isRequired
 };
 
-export default ChatListTalk;
+export default withNavigation(ChatListTalk);
