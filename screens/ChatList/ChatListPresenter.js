@@ -1,8 +1,9 @@
 import React from "react";
-import { Text } from "react-native";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import Loader from "../../components/Loader";
+import UUID from "uuid/v1";
+import ChatListTalk from "../../components/ChatListTalk";
 
 const Container = styled.ScrollView``;
 
@@ -12,7 +13,14 @@ const ChatListPresenter = ({ loading, chatList }) =>
   ) : (
     <Container>
       {chatList
-        ? chatList.map((chat, i) => <Text key={i}>{chat.name}</Text>)
+        ? chatList.map(chat => (
+            <ChatListTalk
+              key={UUID()}
+              name={chat.name}
+              lastTime={chat.lastTime}
+              lastMessage={chat.lastMessage}
+            />
+          ))
         : null}
     </Container>
   );
