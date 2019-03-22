@@ -1,9 +1,6 @@
 export const MAIN_COLOR = "#F781BE";
 export const CHAT_BG_COLOR = "#FFF2FB";
-export const TINT_COLOR = "white";
-export const GREY_COLOR = "#bdc3c7";
-export const INACTIVE_COLOR = "#7f8c8d";
-export const ACTIVE_COLOR = TINT_COLOR;
+export const ACCENT_COLOR = "#FF4081";
 
 /*
 <?xml version="1.0" encoding="utf-8"?>

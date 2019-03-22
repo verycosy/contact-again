@@ -29,7 +29,9 @@ export default class extends React.Component {
 
           const who = {
             path: textFilePath,
-            name: lines[0].replace(" 님과 카카오톡 대화", ""),
+            name: lines[0]
+              .replace(" 님과 카카오톡 대화", "")
+              .replace(" 카카오톡 대화", ""),
             lastTime: `${lastLine[4]} ${lastLine[5]}:${lastLine[6]}`,
             lastMessage: lastLine[7].substring(colonIndex + 2)
           };

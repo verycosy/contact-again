@@ -1,15 +1,34 @@
 import { createStackNavigator } from "react-navigation";
-import { MAIN_COLOR, WHITE, TINT_COLOR } from "../constants/Color";
+import {
+  MAIN_COLOR,
+  WHITE,
+  CHAT_BG_COLOR,
+  ACCENT_COLOR
+} from "../constants/Color";
 
 export const headerStyles = {
   headerStyle: {
-    backgroundColor: MAIN_COLOR,
-    borderBottomWidth: 0
+    backgroundColor: "white",
+    borderBottomWidth: 0,
+    height: 55
   },
   headerTitleStyle: {
-    color: TINT_COLOR
+    fontSize: 16,
+    color: "black"
+  }
+};
+
+export const chatHeaderStyles = {
+  headerStyle: {
+    backgroundColor: CHAT_BG_COLOR,
+    borderBottomWidth: 0,
+    height: 55
   },
-  headerTintColor: TINT_COLOR
+  headerTitleStyle: {
+    fontSize: 16,
+    color: ACCENT_COLOR
+  },
+  headerTintColor: ACCENT_COLOR
 };
 
 export const createStack = (screen, title) =>

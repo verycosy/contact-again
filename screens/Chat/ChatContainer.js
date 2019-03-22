@@ -84,6 +84,12 @@ export default class extends React.PureComponent {
           messages[i].isFirst = false;
         }
       }
+
+      messages.push({
+        id: lines.length,
+        type: 2,
+        content: "대화가 끝났습니다."
+      });
     } catch (error) {
       console.log(error);
     } finally {

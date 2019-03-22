@@ -8,11 +8,13 @@ import { CHAT_BG_COLOR } from "../../constants/Color";
 
 const Container = styled.FlatList`
   flex: 1;
-  padding: 0px 10px;
   background-color: ${CHAT_BG_COLOR};
 `;
 
-const MessageContainer = styled.View``;
+const MessageContainer = styled.View`
+  padding: 0px 10px;
+`;
+
 const View = styled.View`
   flex-direction: row;
 `;
@@ -61,6 +63,7 @@ const ChatPresenter = ({ loading, messages }) =>
         ) : (
           <ChatSystemMessage
             key={item.id}
+            isDate={item.content === "" ? true : false}
             systemMessage={item.content === "" ? item.date : item.content}
           />
         )

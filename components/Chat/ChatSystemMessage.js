@@ -4,19 +4,26 @@ import styled from "styled-components";
 import { MAIN_COLOR } from "../../constants/Color";
 
 const SystemMessage = styled.Text`
-  font-size: 12px;
+  color: ${props => (props.isDate ? MAIN_COLOR : "white")};
   text-align: center;
-  color: ${MAIN_COLOR};
+  font-size: 12px;
   padding: 5px 0px;
-  margin: 5px 0px;
+  margin: 15px 0px;
+  background-color: ${props => (props.isDate ? "transparent" : MAIN_COLOR)};
+  margin-bottom: ${props => (props.isDate ? "15px" : "20px")};
 `;
 
-const ChatSystemMessage = ({ systemMessage }) => (
-  <SystemMessage>{systemMessage}</SystemMessage>
+const ChatSystemMessage = ({ systemMessage, isDate }) => (
+  <SystemMessage isDate={isDate}>
+    {isDate
+      ? "━━━━━━━━━━     " + systemMessage + "     ━━━━━━━━━━"
+      : systemMessage}
+  </SystemMessage>
 );
 
 ChatSystemMessage.propTypes = {
-  systemMessage: PropTypes.string.isRequired
+  systemMessage: PropTypes.string.isRequired,
+  isDate: PropTypes.bool.isRequired
 };
 
 export default ChatSystemMessage;
