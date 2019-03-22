@@ -1,8 +1,8 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import ChatPresenter from "./ChatPresenter";
 import * as RNFS from "react-native-fs";
 
-export default class extends React.Component {
+export default class extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam("name")
@@ -39,30 +39,37 @@ export default class extends React.Component {
           //NOTE: (8) ["", "2018", "9", "3", "오후", "8", "44", ", 회원님: 안녕하세요."]
 
           const currentLine = lines[i].split(reg);
-          const colonIndex = currentLine[7].indexOf(":");
 
-          const who = currentLine[7].substring(2, colonIndex - 1);
-          const content = currentLine[7].substring(colonIndex + 2);
+          if (currentLine.length === 1) {
+            messages[messages.length - 1].content += `\n${currentLine[0]}`;
+          } else {
+            const colonIndex = currentLine[7].indexOf(":");
 
-          let type; //NOTE: 0 그녀 / 1 나 / 2 시스템
+            const who = currentLine[7].substring(2, colonIndex - 1);
+            const content = currentLine[7].substring(colonIndex + 2);
 
-          if (who === "회원님") type = 1;
-          else if (who === "\r") type = 2;
-          //FIXME: 문장 내 줄바꿈도 패스해버림 거기서 멈춘다. & 문장 이어질 경우 멈춰버림
-          else {
-            if (who === ", ") type = 2;
-            else type = 0;
+            let type; //NOTE: 0 그녀 / 1 나 / 2 시스템
+
+            if (who === "회원님") type = 1;
+            else if (who === "\r") type = 2;
+            else {
+              if (who === ", ") type = 2;
+              else type = 0;
+            }
+
+            const message = {
+              id: i,
+              who,
+              date: `${currentLine[1]}년 ${currentLine[2]}월 ${
+                currentLine[3]
+              }일`,
+              time: `${currentLine[4]} ${currentLine[5]}:${currentLine[6]}`,
+              type,
+              content
+            };
+
+            messages.push(message);
           }
-
-          const message = {
-            who,
-            date: `${currentLine[1]}년 ${currentLine[2]}월 ${currentLine[3]}일`,
-            time: `${currentLine[4]} ${currentLine[5]}:${currentLine[6]}`,
-            type,
-            content
-          };
-
-          messages.push(message);
         }
       }
 
@@ -77,8 +84,6 @@ export default class extends React.Component {
           messages[i].isFirst = false;
         }
       }
-
-      console.log(messages);
     } catch (error) {
       console.log(error);
     } finally {
