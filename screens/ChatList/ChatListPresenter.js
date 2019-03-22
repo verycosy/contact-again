@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import Loader from "../../components/Loader";
 import UUID from "uuid/v1";
-import ChatListTalk from "../../components/ChatListTalk";
+import ChatListTalk from "../../components/ChatList/ChatListTalk";
 
 const Container = styled.ScrollView``;
 

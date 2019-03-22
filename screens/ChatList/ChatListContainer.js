@@ -23,15 +23,15 @@ export default class extends React.Component {
           const contents = await RNFS.readFile(textFilePath);
           const lines = contents.toString().split("\n");
 
-          let reg = /^(19|20)\d{2}년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일 (오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9])/;
-
+          const reg = /^(20[0-9][0-9])년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일 (오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9])/;
           const lastLine = lines[lines.length - 2].split(reg);
+          const colonIndex = lastLine[7].indexOf(":");
 
           const who = {
             path: textFilePath,
             name: lines[0].replace(" 님과 카카오톡 대화", ""),
             lastTime: `${lastLine[4]} ${lastLine[5]}:${lastLine[6]}`,
-            lastMessage: lastLine[7].substring(2)
+            lastMessage: lastLine[7].substring(colonIndex + 2)
           };
 
           titleList.push(who);
