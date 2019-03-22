@@ -63,9 +63,22 @@ export default class extends React.Component {
           };
 
           messages.push(message);
-          console.log(message);
         }
       }
+
+      let nowWho = null;
+      for (let i = 0; i < messages.length; i++) {
+        if (messages[i].who !== nowWho) {
+          if (i !== 0) messages[i - 1].isLast = true;
+
+          messages[i].isFirst = true;
+          nowWho = messages[i].who;
+        } else {
+          messages[i].isFirst = false;
+        }
+      }
+
+      console.log(messages);
     } catch (error) {
       console.log(error);
     } finally {

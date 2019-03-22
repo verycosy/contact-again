@@ -6,6 +6,8 @@ import Layout from "../../constants/Layout";
 
 const LastMessage = styled.Text`
   font-size: 12px;
+  margin-left: 55px;
+  color: #999999;
 `;
 
 const ChatListLastMessage = ({ lastMessage }) => (

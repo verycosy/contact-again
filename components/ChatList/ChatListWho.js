@@ -6,8 +6,10 @@ import Layout from "../../constants/Layout";
 
 const Name = styled.Text`
   font-size: 16px;
-  color: black;
-  margin-bottom: 5px;
+  color: #111111;
+  flex: 1;
+  margin-bottom: 2px;
+  margin-left: 55px;
 `;
 
 const ChatListWho = ({ name }) => <Name>{name}</Name>;

@@ -15,8 +15,20 @@ const Container = styled.ScrollView`
 `;
 
 const MessageContainer = styled.View``;
-const Text = styled.Text`
-  display: ${props => (props.type === 0 ? "flex" : "none")};
+const View = styled.View`
+  flex-direction: row;
+`;
+const Image = styled.Image`
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  z-index: 1;
+`;
+
+const ChatWho = styled.Text`
+  margin-left: 50px;
+  margin-bottom: 5px;
+  color: #2d3236;
 `;
 
 const ChatPresenter = ({ loading, messages }) =>
@@ -28,11 +40,17 @@ const ChatPresenter = ({ loading, messages }) =>
         messages.map(message =>
           message.type === 0 || message.type === 1 ? (
             <MessageContainer key={UUID()}>
-              <Text type={message.type}>{message.who}</Text>
+              {message.who !== "회원님" && message.isFirst ? (
+                <View>
+                  <Image source={require("../../assets/default_profile.png")} />
+                  <ChatWho>{message.who}</ChatWho>
+                </View>
+              ) : null}
               <ChatMessage
                 type={message.type}
                 content={message.content}
                 time={message.time}
+                isLast={message.isLast}
               />
             </MessageContainer>
           ) : (

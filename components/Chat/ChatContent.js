@@ -8,7 +8,8 @@ const Text = styled.Text`
   line-height: 21px;
   padding: 8px;
   background-color: ${props => (props.type === 0 ? "white" : "#ffeb33")};
-  max-width: ${Layout.width * 0.8};
+  max-width: ${props =>
+    props.type === 0 ? Layout.width * 0.65 : Layout.width * 0.8};
   color: black;
 `;
 

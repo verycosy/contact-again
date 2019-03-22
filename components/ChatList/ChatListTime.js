@@ -5,9 +5,8 @@ import { withNavigation } from "react-navigation";
 import Layout from "../../constants/Layout";
 
 const LastTime = styled.Text`
-  margin-left: auto;
-  align-self: flex-end;
   font-size: 10px;
+  color: #acacac;
 `;
 
 const ChatListLastTime = ({ lastTime }) => <LastTime>{lastTime}</LastTime>;
