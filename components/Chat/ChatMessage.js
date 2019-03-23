@@ -12,10 +12,10 @@ const View = styled.View`
   margin-left: ${props => (props.type === 0 ? "50px" : "0px")};
 `;
 
-const ChatMessage = ({ content, type, time, isLast }) => (
+const ChatMessage = ({ content, type, time, isLast, path }) => (
   <View type={type} isLast={isLast}>
     {type === 1 && isLast ? <ChatTime chatTime={time} /> : null}
-    <ChatContent content={content} type={type} />
+    <ChatContent content={content} type={type} path={path} />
     {type === 0 && isLast ? <ChatTime chatTime={time} /> : null}
   </View>
 );

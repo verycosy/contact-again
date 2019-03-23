@@ -36,7 +36,7 @@ const CONFIG = {
   viewAreaCoveragePercentThreshold: 70
 };
 
-const ChatPresenter = ({ loading, messages }) =>
+const ChatPresenter = ({ loading, messages, path }) =>
   loading ? (
     <Loader />
   ) : (
@@ -58,6 +58,7 @@ const ChatPresenter = ({ loading, messages }) =>
               content={item.content}
               time={item.time}
               isLast={item.isLast}
+              path={path}
             />
           </MessageContainer>
         ) : (

@@ -14,7 +14,7 @@ export default class extends React.Component {
     try {
       const titleList = [];
       const folderList = await RNFS.readDir(
-        `${RNFS.ExternalStorageDirectoryPath}/kakaotalk/chats/`
+        `${RNFS.ExternalStorageDirectoryPath}/KakaoTalk/Chats/`
       );
 
       await Promise.all(

@@ -101,8 +101,8 @@ export default class extends React.PureComponent {
   }
 
   render() {
-    const { loading, messages } = this.state;
+    const { loading, messages, path } = this.state;
 
-    return <ChatPresenter loading={loading} messages={messages} />;
+    return <ChatPresenter loading={loading} messages={messages} path={path} />;
   }
 }
