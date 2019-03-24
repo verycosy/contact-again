@@ -5,11 +5,11 @@ import Loader from "../../components/Loader";
 
 const Text = styled.Text``;
 
-const SettingPresenter = ({ loading }) =>
-  !loading ? <Loader /> : <Text>설정 페이지</Text>;
+const HelpPresenter = ({ loading }) =>
+  !loading ? <Loader /> : <Text>도움말페이지</Text>;
 
-SettingPresenter.propTypes = {
+HelpPresenter.propTypes = {
   loading: PropTypes.bool.isRequired
 };
 
-export default SettingPresenter;
+export default HelpPresenter;

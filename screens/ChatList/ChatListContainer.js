@@ -1,8 +1,24 @@
 import React from "react";
 import ChatListPresenter from "./ChatListPresenter";
+import { TouchableWithoutFeedback } from "react-native";
 import * as RNFS from "react-native-fs";
+import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
 
 export default class extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerRight: (
+        <TouchableWithoutFeedback
+          onPress={() => navigation.navigate({ routeName: "Setting" })}
+        >
+          <FontAwesomeIcon size={16} icon={faCog} style={{ marginRight: 12 }} />
+        </TouchableWithoutFeedback>
+      )
+    };
+  };
+
   state = {
     loading: true,
     chatList: null

@@ -1,12 +1,11 @@
 import React from "react";
-import { Platform } from "react-native";
 import {
   createBottomTabNavigator,
   createAppContainer,
   createStackNavigator
 } from "react-navigation";
 import ChatListScreen from "../screens/ChatList";
-import SettingScreen from "../screens/Setting";
+import HelpScreen from "../screens/Help";
 import TabBarIcon from "../components/TabBarIcon";
 import { createStack } from "./config";
 
@@ -20,11 +19,11 @@ const TabNavigation = createBottomTabNavigator(
         )
       }
     },
-    Setting: {
-      screen: createStack(SettingScreen, "설정"),
+    Help: {
+      screen: createStack(HelpScreen, "도움말"),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <TabBarIcon focused={focused} name={"설정"} />
+          <TabBarIcon focused={focused} name={"도움말"} />
         )
       }
     }

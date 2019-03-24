@@ -5,11 +5,11 @@ import Loader from "../../components/Loader";
 
 const Text = styled.Text``;
 
-const SettingPresenter = ({ loading }) =>
-  !loading ? <Loader /> : <Text>설정 페이지</Text>;
+const ImageDetailPresenter = ({ loading }) =>
+  !loading ? <Loader /> : <Text>불러왔다.</Text>;
 
-SettingPresenter.propTypes = {
+ImageDetailPresenter.propTypes = {
   loading: PropTypes.bool.isRequired
 };
 
-export default SettingPresenter;
+export default ImageDetailPresenter;
