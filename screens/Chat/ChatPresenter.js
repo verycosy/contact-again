@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { withNavigation } from "react-navigation";
 import Loader from "../../components/Loader";
 import ChatSystemMessage from "../../components/Chat/ChatSystemMessage";
 import ChatMessage from "../../components/Chat/ChatMessage";
@@ -36,7 +37,7 @@ const CONFIG = {
   viewAreaCoveragePercentThreshold: 70
 };
 
-const ChatPresenter = ({ loading, messages, path }) =>
+const ChatPresenter = ({ loading, messages, path, navigation }) =>
   loading ? (
     <Loader />
   ) : (
@@ -83,4 +84,4 @@ ChatPresenter.propTypes = {
   messages: PropTypes.array.isRequired
 };
 
-export default ChatPresenter;
+export default withNavigation(ChatPresenter);

@@ -1,11 +1,60 @@
 import React, { PureComponent } from "react";
 import ChatPresenter from "./ChatPresenter";
 import * as RNFS from "react-native-fs";
+import styled from "styled-components";
+import { TouchableWithoutFeedback } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faImages,
+  faCalendarAlt,
+  faSearch
+} from "@fortawesome/free-solid-svg-icons";
+import { MAIN_COLOR } from "../../constants/Color";
+
+const View = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
 
 export default class extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam("name")
+      title: navigation.getParam("name"),
+      headerRight: (
+        <View>
+          <TouchableWithoutFeedback>
+            <FontAwesomeIcon size={20} icon={faSearch} color={MAIN_COLOR} />
+          </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback
+            onPress={() =>
+              navigation.navigate({
+                routeName: "Gallery",
+                params: {
+                  images: navigation.getParam("images"),
+                  path: navigation.getParam("path")
+                }
+              })
+            }
+          >
+            <FontAwesomeIcon
+              size={22}
+              icon={faImages}
+              color={MAIN_COLOR}
+              style={{ marginLeft: 18, marginRight: 18 }}
+            />
+          </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback>
+            <FontAwesomeIcon
+              size={20}
+              icon={faCalendarAlt}
+              color={MAIN_COLOR}
+              style={{ marginRight: 14 }}
+            />
+          </TouchableWithoutFeedback>
+        </View>
+      )
     };
   };
 
@@ -33,6 +82,8 @@ export default class extends React.PureComponent {
       textFile = await RNFS.readFile(path);
       const lines = textFile.toString().split("\n");
       const reg = /^(20[0-9][0-9])년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일 (오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9])/;
+
+      let images = [];
 
       for (let i = 4; i < lines.length; i++) {
         if (lines[i] !== "" && lines[i] !== "\r") {
@@ -69,6 +120,10 @@ export default class extends React.PureComponent {
             };
 
             messages.push(message);
+
+            if (content.includes(".jpg") || content.includes(".png")) {
+              images.push(content.replace("\r", ""));
+            }
           }
         }
       }
@@ -89,6 +144,10 @@ export default class extends React.PureComponent {
         id: lines.length,
         type: 2,
         content: "대화가 끝났습니다."
+      });
+
+      this.props.navigation.setParams({
+        images
       });
     } catch (error) {
       console.log(error);

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, PermissionsAndroid, StatusBar } from "react-native";
-import MainNavigation from "./navigation/MainNavigation";
+import AppNavigator from "./navigation/AppNavigator";
 
 export default class App extends Component {
   state = { loaded: true };
@@ -37,7 +37,7 @@ export default class App extends Component {
       return (
         <>
           <StatusBar barStyle="light-content" />
-          <MainNavigation />
+          <AppNavigator />
         </>
       );
     } else {

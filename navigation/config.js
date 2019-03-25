@@ -26,18 +26,7 @@ export const chatHeaderStyles = {
   },
   headerTitleStyle: {
     fontSize: 16,
-    color: ACCENT_COLOR
+    color: MAIN_COLOR
   },
-  headerTintColor: ACCENT_COLOR
+  headerTintColor: MAIN_COLOR
 };
-
-export const createStack = (screen, title) =>
-  createStackNavigator({
-    Screen: {
-      screen,
-      navigationOptions: {
-        title,
-        ...headerStyles
-      }
-    }
-  });

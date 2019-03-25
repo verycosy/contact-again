@@ -2,14 +2,24 @@ import React from "react";
 import GalleryPresenter from "./GalleryPresenter";
 
 export default class extends React.Component {
-  state = {
-    loading: true
-  };
+  constructor(props) {
+    super(props);
+    const {
+      navigation: {
+        state: {
+          params: { images, path }
+        }
+      }
+    } = props;
 
-  async componentDidMount() {}
+    this.state = {
+      path,
+      images
+    };
+  }
 
   render() {
-    const { loading } = this.state;
-    return <GalleryPresenter loading={loading} />;
+    const { images, path } = this.state;
+    return <GalleryPresenter images={images} path={path} />;
   }
 }
