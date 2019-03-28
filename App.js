@@ -6,6 +6,7 @@ export default class App extends Component {
   state = { loaded: true };
 
   requestPermission = async () => {
+    //TODO: 허락 후에 바로 파일 로딩하게끔.
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -36,7 +37,7 @@ export default class App extends Component {
     if (loaded) {
       return (
         <>
-          <StatusBar barStyle="light-content" />
+          <StatusBar barStyle="dark-content" backgroundColor="white" />
           <AppNavigator />
         </>
       );

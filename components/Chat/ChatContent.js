@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback } from "react-native";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { withNavigation } from "react-navigation";
 import Layout from "../../constants/Layout";
 import FastImage from "react-native-fast-image";
 
@@ -30,25 +31,34 @@ const View = styled.View`
   elevation: 1;
 `;
 
-const ChatContent = ({ content, type, path }) =>
+const ChatContent = ({ content, type, navigation, who }) =>
   !content.includes(".jpg") && !content.includes(".png") ? ( //TODO: 이미지 확장자들 다 필터링해야함
     <View type={type}>
       <Text>{content}</Text>
     </View>
   ) : (
-    <FastImage
-      source={{
-        uri:
-          "file://" +
-          path.replace("kakaotalkChats.txt", "") +
-          content.replace("\r", "")
-      }}
-      style={styles.imageSquare}
-    />
+    <TouchableWithoutFeedback
+      onPress={() =>
+        navigation.navigate({
+          routeName: "ImageDetail",
+          params: {
+            uri: content,
+            who
+          }
+        })
+      }
+    >
+      <FastImage
+        source={{
+          uri: content
+        }}
+        style={styles.imageSquare}
+      />
+    </TouchableWithoutFeedback>
   );
 
 ChatContent.propTypes = {
   content: PropTypes.string.isRequired
 };
 
-export default ChatContent;
+export default withNavigation(ChatContent);

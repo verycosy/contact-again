@@ -5,7 +5,7 @@ import { withNavigation } from "react-navigation";
 import Loader from "../../components/Loader";
 import ChatSystemMessage from "../../components/Chat/ChatSystemMessage";
 import ChatMessage from "../../components/Chat/ChatMessage";
-import { CHAT_BG_COLOR } from "../../constants/Color";
+import { CHAT_BG_COLOR, MAIN_COLOR } from "../../constants/Color";
 
 const Container = styled.FlatList`
   flex: 1;
@@ -37,7 +37,7 @@ const CONFIG = {
   viewAreaCoveragePercentThreshold: 70
 };
 
-const ChatPresenter = ({ loading, messages, path, navigation }) =>
+const ChatPresenter = ({ loading, messages, navigation }) =>
   loading ? (
     <Loader />
   ) : (
@@ -59,7 +59,7 @@ const ChatPresenter = ({ loading, messages, path, navigation }) =>
               content={item.content}
               time={item.time}
               isLast={item.isLast}
-              path={path}
+              who={item.who}
             />
           </MessageContainer>
         ) : (

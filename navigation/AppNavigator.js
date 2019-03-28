@@ -1,10 +1,11 @@
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import { headerStyles, chatHeaderStyles } from "./config";
+import { headerStyles, chatHeaderStyles, ImageHeaderStyles } from "./config";
 
 import ChatListScreen from "../screens/ChatList";
 import SettingScreen from "../screens/Setting";
 import ChatScreen from "../screens/Chat";
 import GalleryScreen from "../screens/Gallery";
+import ImageDetailScreen from "../screens/ImageDetail";
 
 const ChatListStack = createStackNavigator(
   {
@@ -33,6 +34,12 @@ const ChatListStack = createStackNavigator(
       navigationOptions: {
         title: "설정",
         ...headerStyles
+      }
+    },
+    ImageDetail: {
+      screen: ImageDetailScreen,
+      navigationOptions: {
+        ...ImageHeaderStyles
       }
     }
   },

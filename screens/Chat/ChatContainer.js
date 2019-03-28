@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import ChatPresenter from "./ChatPresenter";
 import * as RNFS from "react-native-fs";
 import styled from "styled-components";
+import { StatusBar } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -16,7 +17,7 @@ const View = styled.View`
   align-items: center;
 `;
 
-export default class extends React.PureComponent {
+export default class extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam("name"),
@@ -77,6 +78,7 @@ export default class extends React.PureComponent {
 
   async componentDidMount() {
     const { path, messages } = this.state;
+    const folderPath = path.replace("kakaotalkChats.txt", "");
 
     try {
       textFile = await RNFS.readFile(path);
@@ -97,7 +99,7 @@ export default class extends React.PureComponent {
             const colonIndex = currentLine[7].indexOf(":");
 
             const who = currentLine[7].substring(2, colonIndex - 1);
-            const content = currentLine[7].substring(colonIndex + 2);
+            let content = currentLine[7].substring(colonIndex + 2);
 
             let type; //NOTE: 0 그녀 / 1 나 / 2 시스템
 
@@ -119,11 +121,13 @@ export default class extends React.PureComponent {
               content
             };
 
-            messages.push(message);
-
             if (content.includes(".jpg") || content.includes(".png")) {
-              images.push(content.replace("\r", ""));
+              content = "file://" + folderPath + content.replace("\r", "");
+              message.content = content;
+              images.push({ source: { uri: content }, who });
             }
+
+            messages.push(message);
           }
         }
       }
@@ -162,6 +166,14 @@ export default class extends React.PureComponent {
   render() {
     const { loading, messages, path } = this.state;
 
-    return <ChatPresenter loading={loading} messages={messages} path={path} />;
+    return (
+      <>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="rgba(247, 129, 190, 0.8)"
+        />
+        <ChatPresenter loading={loading} messages={messages} path={path} />
+      </>
+    );
   }
 }
