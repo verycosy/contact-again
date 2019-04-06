@@ -1,10 +1,11 @@
 import React from "react";
-import { StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, Text } from "react-native";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import Layout from "../../constants/Layout";
 import FastImage from "react-native-fast-image";
+import checkMediaExt from "../../utils.js/checkMediaExt";
 
 const styles = StyleSheet.create({
   imageSquare: {
@@ -14,13 +15,12 @@ const styles = StyleSheet.create({
     width: Layout.width * 0.65,
     height: Layout.height * 0.5,
     borderRadius: 4
+  },
+  textMessage: {
+    color: "black",
+    lineHeight: 21
   }
 });
-
-const Text = styled.Text`
-  color: black;
-  line-height: 21px;
-`;
 
 const View = styled.View`
   border-radius: 4px;
@@ -31,10 +31,10 @@ const View = styled.View`
   elevation: 1;
 `;
 
-const ChatContent = ({ content, type, navigation, who }) =>
-  !content.includes(".jpg") && !content.includes(".png") ? ( //TODO: 이미지 확장자들 다 필터링해야함
+const ChatContent = ({ content, type, navigation, images, imageIndex }) =>
+  !checkMediaExt(content) ? ( //TODO: 이미지 확장자들 다 필터링해야함
     <View type={type}>
-      <Text>{content}</Text>
+      <Text style={styles.textMessage}>{content}</Text>
     </View>
   ) : (
     <TouchableWithoutFeedback
@@ -42,8 +42,9 @@ const ChatContent = ({ content, type, navigation, who }) =>
         navigation.navigate({
           routeName: "ImageDetail",
           params: {
-            uri: content,
-            who
+            index: images[imageIndex].index,
+            images,
+            info: images[imageIndex].info
           }
         })
       }

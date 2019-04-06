@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
-import ChatPresenter from "./ChatPresenter";
 import * as RNFS from "react-native-fs";
+import Drawer from "react-native-drawer";
 import styled from "styled-components";
 import { StatusBar } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
@@ -10,19 +10,60 @@ import {
   faCalendarAlt,
   faSearch
 } from "@fortawesome/free-solid-svg-icons";
-import { MAIN_COLOR } from "../../constants/Color";
+import { withNavigation } from "react-navigation";
+import CalendarDrawer from "../../components/Chat/CalendarDrawer";
+import Loader from "../../components/Loader";
+import ChatSystemMessage from "../../components/Chat/ChatSystemMessage";
+import ChatMessage from "../../components/Chat/ChatMessage";
+import { CHAT_BG_COLOR, MAIN_COLOR } from "../../constants/Color";
+import RecyclerviewList, { DataSource } from "react-native-recyclerview-list";
+import checkMediaExt from "../../utils.js/checkMediaExt";
+import checkGroup from "../../utils.js/checkGroup";
+import Layout from "../../constants/Layout";
 
-const View = styled.View`
+const MenuView = styled.View`
   flex-direction: row;
   align-items: center;
 `;
 
+const Container = styled.FlatList`
+  flex: 1;
+  background-color: ${CHAT_BG_COLOR};
+`;
+
+const MessageContainer = styled.View`
+  padding: 0px 10px;
+`;
+
+const View = styled.View`
+  flex-direction: row;
+`;
+
+const Image = styled.Image`
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  z-index: 1;
+`;
+
+const ChatWho = styled.Text`
+  margin-left: 50px;
+  margin-bottom: 5px;
+  color: #2d3236;
+`;
+
+const CONFIG = {
+  viewAreaCoveragePercentThreshold: 70
+};
+
 export default class extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.getParam("name"),
+      title: checkGroup(navigation.getParam("name"))
+        ? "그룹채팅"
+        : navigation.getParam("name"),
       headerRight: (
-        <View>
+        <MenuView>
           <TouchableWithoutFeedback>
             <FontAwesomeIcon size={20} icon={faSearch} color={MAIN_COLOR} />
           </TouchableWithoutFeedback>
@@ -32,8 +73,7 @@ export default class extends React.Component {
               navigation.navigate({
                 routeName: "Gallery",
                 params: {
-                  images: navigation.getParam("images"),
-                  path: navigation.getParam("path")
+                  images: navigation.getParam("images")
                 }
               })
             }
@@ -46,7 +86,7 @@ export default class extends React.Component {
             />
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={navigation.getParam("openDrawer")}>
             <FontAwesomeIcon
               size={20}
               icon={faCalendarAlt}
@@ -54,17 +94,19 @@ export default class extends React.Component {
               style={{ marginRight: 14 }}
             />
           </TouchableWithoutFeedback>
-        </View>
+        </MenuView>
       )
     };
   };
 
   constructor(props) {
     super(props);
+    this.listRef = React.createRef();
+
     const {
       navigation: {
         state: {
-          params: { name, path }
+          params: { path }
         }
       }
     } = props;
@@ -72,20 +114,21 @@ export default class extends React.Component {
     this.state = {
       path,
       loading: true,
-      messages: []
+      messages: [],
+      dates: [],
+      images: [],
+      drawerOpen: false
     };
   }
 
   async componentDidMount() {
-    const { path, messages } = this.state;
+    const { path, messages, dates, images } = this.state;
     const folderPath = path.replace("kakaotalkChats.txt", "");
 
     try {
       textFile = await RNFS.readFile(path);
       const lines = textFile.toString().split("\n");
       const reg = /^(20[0-9][0-9])년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일 (오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9])/;
-
-      let images = [];
 
       for (let i = 4; i < lines.length; i++) {
         if (lines[i] !== "" && lines[i] !== "\r") {
@@ -100,31 +143,45 @@ export default class extends React.Component {
 
             const who = currentLine[7].substring(2, colonIndex - 1);
             let content = currentLine[7].substring(colonIndex + 2);
+            let date = `${currentLine[1]}년 ${currentLine[2]}월 ${
+              currentLine[3]
+            }일`;
 
             let type; //NOTE: 0 그녀 / 1 나 / 2 시스템
 
             if (who === "회원님") type = 1;
-            else if (who === "\r") type = 2;
-            else {
+            else if (who === "\r") {
+              type = 2;
+              dates.push({
+                index: messages.length,
+                date
+              });
+            } else {
               if (who === ", ") type = 2;
               else type = 0;
             }
 
             const message = {
-              id: i,
+              id: messages.length,
               who,
-              date: `${currentLine[1]}년 ${currentLine[2]}월 ${
-                currentLine[3]
-              }일`,
+              date,
               time: `${currentLine[4]} ${currentLine[5]}:${currentLine[6]}`,
               type,
               content
             };
 
-            if (content.includes(".jpg") || content.includes(".png")) {
+            if (checkMediaExt(content)) {
+              const imageIndex = images.length;
               content = "file://" + folderPath + content.replace("\r", "");
               message.content = content;
-              images.push({ source: { uri: content }, who });
+              message.imageIndex = imageIndex;
+
+              images.push({
+                index: imageIndex,
+                source: { uri: content },
+                info: { who, date },
+                dimensions: { width: Layout.width, height: Layout.height }
+              });
             }
 
             messages.push(message);
@@ -151,20 +208,31 @@ export default class extends React.Component {
       });
 
       this.props.navigation.setParams({
-        images
+        images,
+        openDrawer: () => this.setState({ drawerOpen: true })
       });
     } catch (error) {
       console.log(error);
     } finally {
       this.setState({
+        images,
         loading: false,
-        messages
+        messages,
+        dates
       });
     }
   }
 
+  calendarHandle = index => {
+    this.listRef.current.scrollToIndex({
+      index,
+      animated: false,
+      viewPosition: 0
+    });
+  };
+
   render() {
-    const { loading, messages, path } = this.state;
+    const { loading, messages, path, drawerOpen, dates, images } = this.state;
 
     return (
       <>
@@ -172,7 +240,67 @@ export default class extends React.Component {
           barStyle="light-content"
           backgroundColor="rgba(247, 129, 190, 0.8)"
         />
-        <ChatPresenter loading={loading} messages={messages} path={path} />
+
+        <Drawer
+          open={drawerOpen}
+          side="right"
+          type="overlay"
+          tapToClose={true}
+          content={
+            <CalendarDrawer
+              dates={dates}
+              calendarHandle={this.calendarHandle}
+            />
+          }
+          openDrawerOffset={0.6}
+          panCloseMask={0.6}
+        >
+          {loading ? (
+            <Loader />
+          ) : (
+            <RecyclerviewList //NOTE: FlatList 어째서인지 item 으로 받지 않으면 오류난다. message로 받으면 왜 안 되는 걸까..
+              ref={this.listRef}
+              velocity={500}
+              style={{
+                flex: 1,
+                backgroundColor: CHAT_BG_COLOR
+              }}
+              dataSource={new DataSource(messages, item => item.id)}
+              renderItem={({ item }) =>
+                item.type === 0 || item.type === 1 ? (
+                  <MessageContainer key={item.id}>
+                    {item.who !== "회원님" && item.isFirst ? (
+                      <View>
+                        <Image
+                          source={require("../../assets/default_profile.png")}
+                        />
+                        <ChatWho>{item.who}</ChatWho>
+                      </View>
+                    ) : null}
+                    <ChatMessage
+                      images={images}
+                      type={item.type}
+                      imageIndex={
+                        checkMediaExt(item.content) ? item.imageIndex : -1
+                      }
+                      content={item.content}
+                      time={item.time}
+                      isLast={item.isLast}
+                    />
+                  </MessageContainer>
+                ) : (
+                  <ChatSystemMessage
+                    key={item.id}
+                    isDate={item.content === "" ? true : false}
+                    systemMessage={
+                      item.content === "" ? item.date : item.content
+                    }
+                  />
+                )
+              }
+            />
+          )}
+        </Drawer>
       </>
     );
   }
