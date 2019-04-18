@@ -3,7 +3,7 @@ import * as RNFS from "react-native-fs";
 import Drawer from "react-native-drawer";
 import styled from "styled-components";
 import { StatusBar } from "react-native";
-import { TouchableWithoutFeedback } from "react-native";
+import { TouchableWithoutFeedback, AppState } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faImages,
@@ -16,7 +16,9 @@ import Loader from "../../components/Loader";
 import ChatSystemMessage from "../../components/Chat/ChatSystemMessage";
 import ChatMessage from "../../components/Chat/ChatMessage";
 import { CHAT_BG_COLOR, MAIN_COLOR } from "../../constants/Color";
-import RecyclerviewList, { DataSource } from "react-native-recyclerview-list";
+import RecyclerviewList, {
+  DataSource
+} from "react-native-recyclerview-list-android";
 import checkMediaExt from "../../utils.js/checkMediaExt";
 import checkGroup from "../../utils.js/checkGroup";
 import Layout from "../../constants/Layout";
@@ -51,10 +53,6 @@ const ChatWho = styled.Text`
   margin-bottom: 5px;
   color: #2d3236;
 `;
-
-const CONFIG = {
-  viewAreaCoveragePercentThreshold: 70
-};
 
 export default class extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -121,7 +119,21 @@ export default class extends React.Component {
     };
   }
 
+  _createBookmark() {
+    console.log("Write!!");
+  }
+
+  componentWillUnmount() {
+    this._createBookmark();
+  }
+
   async componentDidMount() {
+    AppState.addEventListener("change", state => {
+      if (state === "background") {
+        this._createBookmark();
+      }
+    });
+
     const { path, messages, dates, images } = this.state;
     const folderPath = path.replace("kakaotalkChats.txt", "");
 
@@ -232,7 +244,7 @@ export default class extends React.Component {
   };
 
   render() {
-    const { loading, messages, path, drawerOpen, dates, images } = this.state;
+    const { loading, messages, drawerOpen, dates, images } = this.state;
 
     return (
       <>

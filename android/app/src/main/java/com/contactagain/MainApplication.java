@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.github.godness84.RNRecyclerViewList.RNRecyclerviewListPackage;
+
 import com.horcrux.svg.SvgPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;

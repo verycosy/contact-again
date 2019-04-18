@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, PermissionsAndroid, StatusBar } from "react-native";
+import { Text, PermissionsAndroid, StatusBar } from "react-native";
 import AppNavigator from "./navigation/AppNavigator";
 
 export default class App extends Component {
@@ -7,6 +7,7 @@ export default class App extends Component {
 
   requestPermission = async () => {
     //TODO: 허락 후에 바로 파일 로딩하게끔.
+    //TODO: 첫 권한 설정시 사용법
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -31,7 +32,6 @@ export default class App extends Component {
 
   render() {
     const { loaded } = this.state;
-
     this.requestPermission();
 
     if (loaded) {
