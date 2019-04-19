@@ -2,13 +2,20 @@ import React, { PureComponent } from "react";
 import * as RNFS from "react-native-fs";
 import Drawer from "react-native-drawer";
 import styled from "styled-components";
-import { StatusBar } from "react-native";
-import { TouchableWithoutFeedback, AppState } from "react-native";
+import { StatusBar, Text } from "react-native";
+import {
+  TouchableOpacity,
+  AppState,
+  TextInput,
+  ToastAndroid
+} from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faImages,
   faCalendarAlt,
-  faSearch
+  faSearch,
+  faChevronUp,
+  faChevronDown
 } from "@fortawesome/free-solid-svg-icons";
 import { withNavigation } from "react-navigation";
 import CalendarDrawer from "../../components/Chat/CalendarDrawer";
@@ -54,19 +61,50 @@ const ChatWho = styled.Text`
   color: #2d3236;
 `;
 
+const SearchArrowContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  background-color: ${MAIN_COLOR};
+  width:${Layout.width}
+  padding: 10px 0px;
+`;
+
 export default class extends React.Component {
   static navigationOptions = ({ navigation }) => {
-    return {
-      title: checkGroup(navigation.getParam("name"))
-        ? "그룹채팅"
-        : navigation.getParam("name"),
-      headerRight: (
-        <MenuView>
-          <TouchableWithoutFeedback>
-            <FontAwesomeIcon size={20} icon={faSearch} color={MAIN_COLOR} />
-          </TouchableWithoutFeedback>
+    const searching = navigation.getParam("searching");
 
-          <TouchableWithoutFeedback
+    return {
+      title: !searching
+        ? checkGroup(navigation.getParam("name"))
+          ? "그룹채팅"
+          : navigation.getParam("name")
+        : null,
+      headerTitle: !searching ? null : (
+        <TextInput
+          returnKeyType={"search"}
+          style={{ width: "100%" }}
+          onChangeText={search => navigation.setParams({ search })}
+          placeholder="대화 내용 검색"
+          value={navigation.getParam("search")}
+          autoFocus
+          onSubmitEditing={({ nativeEvent: { text, eventCount, target } }) =>
+            navigation.getParam("searchHandler")(text)
+          }
+        />
+      ),
+      headerRight: !searching ? (
+        <MenuView>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.setParams({
+                searching: true
+              })
+            }
+          >
+            <FontAwesomeIcon size={20} icon={faSearch} color={MAIN_COLOR} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
             onPress={() =>
               navigation.navigate({
                 routeName: "Gallery",
@@ -82,18 +120,18 @@ export default class extends React.Component {
               color={MAIN_COLOR}
               style={{ marginLeft: 18, marginRight: 18 }}
             />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
 
-          <TouchableWithoutFeedback onPress={navigation.getParam("openDrawer")}>
+          <TouchableOpacity onPress={navigation.getParam("openDrawer")}>
             <FontAwesomeIcon
               size={20}
               icon={faCalendarAlt}
               color={MAIN_COLOR}
               style={{ marginRight: 14 }}
             />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </MenuView>
-      )
+      ) : null
     };
   };
 
@@ -115,9 +153,40 @@ export default class extends React.Component {
       messages: [],
       dates: [],
       images: [],
-      drawerOpen: false
+      drawerOpen: false,
+      searched: false
     };
   }
+
+  _searchMessages = text => {
+    let cnt = 0;
+    const { messages } = this.state;
+    const searchedIndex = [];
+
+    for (message of messages) {
+      if (message.content.includes(text)) {
+        cnt++;
+        searchedIndex.push(message.id);
+        console.log(message.content);
+      }
+    }
+
+    if (cnt !== 0) {
+      ToastAndroid.show(`${cnt}개의 검색결과가 있습니다.`, ToastAndroid.SHORT);
+      this.setState({
+        searched: true,
+        searchedIndex,
+        searchingIndex: 0
+      });
+
+      this.calendarHandle(searchedIndex[0]);
+    } else {
+      ToastAndroid.show(`검색결과가 없습니다.`, ToastAndroid.SHORT);
+      this.setState({
+        searched: false
+      });
+    }
+  };
 
   _createBookmark() {
     console.log("Write!!");
@@ -221,7 +290,10 @@ export default class extends React.Component {
 
       this.props.navigation.setParams({
         images,
-        openDrawer: () => this.setState({ drawerOpen: true })
+        openDrawer: () => this.setState({ drawerOpen: true }),
+        searchHandler: this._searchMessages,
+        searching: false,
+        search: ""
       });
     } catch (error) {
       console.log(error);
@@ -243,8 +315,35 @@ export default class extends React.Component {
     });
   };
 
+  _searchUpDown = type => {
+    const { searchingIndex, searchedIndex } = this.state;
+
+    if (type === 1) {
+      if (searchingIndex > 0) {
+        this.setState({
+          searchingIndex: searchingIndex - 1
+        });
+      }
+    } else {
+      if (searchingIndex < searchedIndex.length - 1) {
+        this.setState({
+          searchingIndex: searchingIndex + 1
+        });
+      }
+    }
+
+    this.calendarHandle(searchedIndex[this.state.searchingIndex]);
+  };
+
   render() {
-    const { loading, messages, drawerOpen, dates, images } = this.state;
+    const {
+      loading,
+      messages,
+      drawerOpen,
+      dates,
+      images,
+      searched
+    } = this.state;
 
     return (
       <>
@@ -272,7 +371,6 @@ export default class extends React.Component {
           ) : (
             <RecyclerviewList //NOTE: FlatList 어째서인지 item 으로 받지 않으면 오류난다. message로 받으면 왜 안 되는 걸까..
               ref={this.listRef}
-              velocity={500}
               style={{
                 flex: 1,
                 backgroundColor: CHAT_BG_COLOR
@@ -313,6 +411,43 @@ export default class extends React.Component {
             />
           )}
         </Drawer>
+
+        {searched ? (
+          <SearchArrowContainer>
+            <TouchableOpacity onPress={() => this._searchUpDown(1)}>
+              <FontAwesomeIcon
+                size={25}
+                icon={faChevronUp}
+                color={this.state.searchingIndex === 0 ? "#999" : "white"}
+                style={{ marginRight: 15 }}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => this._searchUpDown(-1)}>
+              <FontAwesomeIcon
+                size={25}
+                icon={faChevronDown}
+                color={
+                  this.state.searchingIndex + 1 ===
+                  this.state.searchedIndex.length
+                    ? "#999"
+                    : "white"
+                }
+              />
+            </TouchableOpacity>
+
+            <Text
+              style={{
+                alignSelf: "flex-end",
+                color: "white",
+                fontWeight: "600"
+              }}
+            >
+              {this.state.searchingIndex + 1} /{" "}
+              {this.state.searchedIndex.length}
+            </Text>
+          </SearchArrowContainer>
+        ) : null}
       </>
     );
   }

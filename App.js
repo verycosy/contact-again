@@ -7,7 +7,8 @@ export default class App extends Component {
 
   requestPermission = async () => {
     //TODO: 허락 후에 바로 파일 로딩하게끔.
-    //TODO: 첫 권한 설정시 사용법
+    //TODO: 첫 권한 설정시 사용법, 대화 없을 때도.
+    //TODO: 검색 등 모든 것에 로딩 넣기
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
