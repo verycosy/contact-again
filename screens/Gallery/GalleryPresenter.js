@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
   item: {
     width: (Layout.width - 6) / 3,
     height: (Layout.width - 6) / 3,
-    margin: 1,
-    backgroundColor: "#eee"
+    backgroundColor: "#eee",
+    margin: 1
   },
   list: {
     flex: 1
@@ -36,6 +36,7 @@ const GalleryPresenter = ({ images, navigation }) =>
       <FlatGrid
         spacing={0}
         style={styles.list}
+        itemDimension={(Layout.width - 6) / 3}
         items={images}
         renderItem={({ item }) => (
           <TouchableOpacity

@@ -6,6 +6,8 @@ import SettingScreen from "../screens/Setting";
 import ChatScreen from "../screens/Chat";
 import GalleryScreen from "../screens/Gallery";
 import ImageDetailScreen from "../screens/ImageDetail";
+import SettingPasswordScreen from "../screens/SettingPassword";
+import SettingPathScreen from "../screens/SettingPath";
 
 const ChatListStack = createStackNavigator(
   {
@@ -33,6 +35,19 @@ const ChatListStack = createStackNavigator(
       screen: SettingScreen,
       navigationOptions: {
         title: "설정",
+        ...headerStyles
+      }
+    },
+    SettingPassword: {
+      screen: SettingPasswordScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    SettingPath: {
+      screen: SettingPathScreen,
+      navigationOptions: {
+        title: "대화폴더 경로 설정",
         ...headerStyles
       }
     },

@@ -8,8 +8,19 @@ export default class extends React.Component {
 
   async componentDidMount() {}
 
+  constructor(props) {
+    super(props);
+
+    const { navigation } = props;
+
+    this.state = {
+      loading: true,
+      navigation
+    };
+  }
+
   render() {
-    const { loading } = this.state;
-    return <SettingPresenter loading={loading} />;
+    const { loading, navigation } = this.state;
+    return <SettingPresenter loading={loading} navigation={navigation} />;
   }
 }

@@ -154,7 +154,7 @@ export default class extends React.Component {
       dates: [],
       images: [],
       drawerOpen: false,
-      searched: false
+      searched: false // 검색 성공했는지
     };
   }
 
@@ -167,7 +167,6 @@ export default class extends React.Component {
       if (message.content.includes(text)) {
         cnt++;
         searchedIndex.push(message.id);
-        console.log(message.content);
       }
     }
 
@@ -175,8 +174,8 @@ export default class extends React.Component {
       ToastAndroid.show(`${cnt}개의 검색결과가 있습니다.`, ToastAndroid.SHORT);
       this.setState({
         searched: true,
-        searchedIndex,
-        searchingIndex: 0
+        searchedIndex, // messages에서 찾은 검색 결과 인덱스들의 배열
+        searchingIndex: 0 // 현재 검색 결과 인덱스
       });
 
       this.calendarHandle(searchedIndex[0]);
@@ -292,7 +291,7 @@ export default class extends React.Component {
         images,
         openDrawer: () => this.setState({ drawerOpen: true }),
         searchHandler: this._searchMessages,
-        searching: false,
+        searching: false, // 검색창 활성화 되어있는지
         search: ""
       });
     } catch (error) {
@@ -369,7 +368,7 @@ export default class extends React.Component {
           {loading ? (
             <Loader />
           ) : (
-            <RecyclerviewList //NOTE: FlatList 어째서인지 item 으로 받지 않으면 오류난다. message로 받으면 왜 안 되는 걸까..
+            <RecyclerviewList
               ref={this.listRef}
               style={{
                 flex: 1,
@@ -414,12 +413,25 @@ export default class extends React.Component {
 
         {searched ? (
           <SearchArrowContainer>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 18,
+                alignSelf: "center",
+                fontWeight: "600",
+                marginLeft: 15,
+                marginRight: "auto"
+              }}
+            >
+              {this.state.searchingIndex + 1} /{" "}
+              {this.state.searchedIndex.length}
+            </Text>
+
             <TouchableOpacity onPress={() => this._searchUpDown(1)}>
               <FontAwesomeIcon
                 size={25}
                 icon={faChevronUp}
-                color={this.state.searchingIndex === 0 ? "#999" : "white"}
-                style={{ marginRight: 15 }}
+                color={this.state.searchingIndex === 0 ? "#bbb" : "white"}
               />
             </TouchableOpacity>
 
@@ -427,6 +439,10 @@ export default class extends React.Component {
               <FontAwesomeIcon
                 size={25}
                 icon={faChevronDown}
+                style={{
+                  marginRight: 15,
+                  marginLeft: 15
+                }}
                 color={
                   this.state.searchingIndex + 1 ===
                   this.state.searchedIndex.length
@@ -435,17 +451,6 @@ export default class extends React.Component {
                 }
               />
             </TouchableOpacity>
-
-            <Text
-              style={{
-                alignSelf: "flex-end",
-                color: "white",
-                fontWeight: "600"
-              }}
-            >
-              {this.state.searchingIndex + 1} /{" "}
-              {this.state.searchedIndex.length}
-            </Text>
           </SearchArrowContainer>
         ) : null}
       </>

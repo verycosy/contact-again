@@ -1,6 +1,6 @@
 import React from "react";
 import ChatListPresenter from "./ChatListPresenter";
-import { TouchableWithoutFeedback } from "react-native";
+import { TouchableOpacity } from "react-native";
 import * as RNFS from "react-native-fs";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -10,11 +10,11 @@ export default class extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerRight: (
-        <TouchableWithoutFeedback
+        <TouchableOpacity
           onPress={() => navigation.navigate({ routeName: "Setting" })}
         >
           <FontAwesomeIcon size={16} icon={faCog} style={{ marginRight: 12 }} />
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       )
     };
   };
@@ -36,7 +36,7 @@ export default class extends React.Component {
       await Promise.all(
         folderList.map(async folder => {
           const textFilePath = `${folder.path}/kakaotalkChats.txt`;
-          const contents = await RNFS.readFile(textFilePath);
+          const contents = await RNFS.readFile(textFilePath, "utf8");
           const lines = contents.toString().split("\n");
 
           const reg = /^(20[0-9][0-9])년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일 (오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9])/;
