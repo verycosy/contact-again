@@ -3,6 +3,7 @@ package com.contactagain;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.github.godness84.RNRecyclerViewList.RNRecyclerviewListPackage;
 
 import com.horcrux.svg.SvgPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFetchBlobPackage(),
             new RNRecyclerviewListPackage(),
             new SvgPackage(),
             new FastImageViewPackage(),

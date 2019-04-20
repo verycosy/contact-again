@@ -25,7 +25,12 @@ const SettingPresenter = ({ loading, navigation }) =>
   ) : (
     <>
       <TouchableOpacity
-        onPress={() => navigation.navigate({ routeName: "SettingPassword" })}
+        onPress={() =>
+          navigation.navigate({
+            routeName: "SettingPassword",
+            params: { check: false, checkPassword: null }
+          })
+        }
       >
         <View>
           <SettingMenu>비밀번호</SettingMenu>

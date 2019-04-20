@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    implementation project(':rn-fetch-blob')
     implementation project(':react-native-recyclerview-list-android')
     implementation project(':react-native-svg')
     implementation project(':react-native-fast-image')
