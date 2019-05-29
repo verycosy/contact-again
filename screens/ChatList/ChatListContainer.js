@@ -2,7 +2,6 @@ import React from "react";
 import ChatListPresenter from "./ChatListPresenter";
 import { TouchableOpacity } from "react-native";
 import RNFetchBlob from "rn-fetch-blob";
-import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 
@@ -47,8 +46,11 @@ export default class extends React.Component {
             let data = "";
             stream.onError(error => reject(error));
             stream.open();
+            let cnt = 0;
             stream.onData(chunk => {
               data += chunk;
+
+              console.log(textFilePath + chunk.toString().split("\n").length);
             });
             stream.onEnd(() => {
               const lines = data.toString().split("\n");

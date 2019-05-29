@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, PermissionsAndroid, StatusBar } from "react-native";
 import AppNavigator from "./navigation/AppNavigator";
+import RNFetchBlob from "rn-fetch-blob";
 
 export default class App extends Component {
   state = { loaded: true };
@@ -41,6 +42,17 @@ export default class App extends Component {
       console.log(err);
     }
   };
+
+  componentDidMount() {
+    const settingFile = RNFetchBlob.fs.dirs.DocumentDir + "password.txt";
+
+    RNFetchBlob.fs
+      .readFile(settingFile, "utf8")
+      .then(data => {
+        console.log(data);
+      })
+      .catch(err => console.log("NO DATA"));
+  }
 
   render() {
     const { loaded } = this.state;
