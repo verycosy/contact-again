@@ -6,6 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 
 export default class extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   static navigationOptions = ({ navigation }) => {
     return {
       headerRight: (
@@ -24,6 +28,16 @@ export default class extends React.Component {
   };
 
   async componentDidMount() {
+    const settingFile = RNFetchBlob.fs.dirs.DocumentDir + "password.txt";
+    const password = await RNFetchBlob.fs.readFile(settingFile, "utf8");
+
+    if (password) {
+      this.props.navigation.navigate({
+        routeName: "SettingPassword",
+        params: { check: false, checkPassword: password }
+      });
+    }
+
     let chatList, error;
 
     try {

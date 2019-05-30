@@ -34,7 +34,13 @@ const NumPadLine = styled.View`
   flex-direction: row;
 `;
 
-const SettingPasswordPresenter = ({ loading, password, handler, check }) =>
+const SettingPasswordPresenter = ({
+  loading,
+  password,
+  handler,
+  check,
+  checkPassword
+}) =>
   !loading ? (
     <Loader />
   ) : (
@@ -43,7 +49,9 @@ const SettingPasswordPresenter = ({ loading, password, handler, check }) =>
         <Text style={{ fontSize: 24, color: "black" }}>암호</Text>
         <Text style={{ marginTop: 10, marginBottom: 20 }}>
           {!check
-            ? "비밀번호를 입력해주세요."
+            ? checkPassword
+              ? "비밀번호를 입력해주세요."
+              : "변경할 비밀번호를 입력해주세요."
             : "비밀번호를 한 번 더 입력해주세요."}
         </Text>
         <View style={{ flexDirection: "row" }}>

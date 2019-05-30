@@ -1,11 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { Text, PermissionsAndroid, StatusBar } from "react-native";
 import AppNavigator from "./navigation/AppNavigator";
 import RNFetchBlob from "rn-fetch-blob";
 
-export default class App extends Component {
-  state = { loaded: true };
-
+export default () => {
   requestPermission = async () => {
     //TODO: 허락 후에 바로 파일 로딩하게끔.
     //TODO: 첫 권한 설정시 사용법, 대화 없을 때도.
@@ -43,30 +41,12 @@ export default class App extends Component {
     }
   };
 
-  componentDidMount() {
-    const settingFile = RNFetchBlob.fs.dirs.DocumentDir + "password.txt";
+  this.requestPermission();
 
-    RNFetchBlob.fs
-      .readFile(settingFile, "utf8")
-      .then(data => {
-        console.log(data);
-      })
-      .catch(err => console.log("NO DATA"));
-  }
-
-  render() {
-    const { loaded } = this.state;
-    this.requestPermission();
-
-    if (loaded) {
-      return (
-        <>
-          <StatusBar barStyle="dark-content" backgroundColor="white" />
-          <AppNavigator />
-        </>
-      );
-    } else {
-      return <Text>로딩중</Text>;
-    }
-  }
-}
+  return (
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <AppNavigator />
+    </>
+  );
+};

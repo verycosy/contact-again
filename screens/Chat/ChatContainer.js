@@ -65,9 +65,9 @@ const ChatWho = styled.Text`
 const SearchArrowContainer = styled.View`
   flex-direction: row;
   justify-content: center;
-  background-color: ${MAIN_COLOR};
-  width:${Layout.width}
   padding: 10px 0px;
+  background-color: ${MAIN_COLOR};
+  width: ${Layout.width};
 `;
 
 export default class extends React.Component {
@@ -207,10 +207,6 @@ export default class extends React.Component {
     const folderPath = path.replace("kakaotalkChats.txt", "");
 
     try {
-      lineReader.eachLine(path, function(line, last) {
-        console.log(line);
-      });
-
       const textFile = await RNFS.readFile(path);
       const lines = textFile.toString().split("\n");
       const reg = /^(20[0-9][0-9])년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일 (오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9])/;

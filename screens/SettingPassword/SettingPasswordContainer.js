@@ -7,7 +7,7 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
-    const {
+    let {
       navigation: {
         state: {
           params: { check, checkPassword }
@@ -60,11 +60,21 @@ export default class extends React.Component {
                 });
               });
             } else {
-              this.props.navigation.push("SettingPassword", {
-                check: true,
-                checkPassword: password
-              });
-              console.log("NAV");
+              if (checkPassword !== null) {
+                if (password === checkPassword) this.props.navigation.pop();
+                else {
+                  ToastAndroid.show(`비밀번호가 다릅니다.`, ToastAndroid.SHORT);
+
+                  this.setState({
+                    password: ""
+                  });
+                }
+              } else {
+                this.props.navigation.push("SettingPassword", {
+                  check: true,
+                  checkPassword: password
+                });
+              }
             }
           }
         }
@@ -77,7 +87,7 @@ export default class extends React.Component {
   };
 
   render() {
-    const { loading, password, check } = this.state;
+    const { loading, password, check, checkPassword } = this.state;
 
     return (
       <SettingPasswordPresenter
@@ -85,6 +95,7 @@ export default class extends React.Component {
         password={password}
         handler={this._passwordInput}
         check={check}
+        checkPassword={checkPassword}
       />
     );
   }
