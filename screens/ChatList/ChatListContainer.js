@@ -29,13 +29,16 @@ export default class extends React.Component {
 
   async componentDidMount() {
     const settingFile = RNFetchBlob.fs.dirs.DocumentDir + "password.txt";
-    const password = await RNFetchBlob.fs.readFile(settingFile, "utf8");
-
-    if (password) {
-      this.props.navigation.navigate({
-        routeName: "SettingPassword",
-        params: { check: false, checkPassword: password }
-      });
+    try {
+      const password = await RNFetchBlob.fs.readFile(settingFile, "utf8");
+      if (password) {
+        this.props.navigation.navigate({
+          routeName: "SettingPassword",
+          params: { check: false, checkPassword: password }
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
 
     let chatList, error;

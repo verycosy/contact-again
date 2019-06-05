@@ -7,11 +7,13 @@ export default ({ password }) => {
 
   for (let i = 0; i < password.length; i++) {
     items.push(
+      /*
       <Image
         source={require("../assets/pw-icon.png")}
         key={i}
         style={{ marginLeft: 10, marginRight: 10 }}
-      />
+      />*/
+      <Text key={i}> * </Text>
     );
   }
 

@@ -149,6 +149,7 @@ export default class extends React.Component {
     } = props;
 
     this.state = {
+      index: 0,
       path,
       loading: true,
       messages: [],
@@ -189,22 +190,44 @@ export default class extends React.Component {
   };
 
   _createBookmark() {
-    console.log("Write!!");
+    const index = this.listRef.current.getCurrentIndex();
+    const path =
+      RNFetchBlob.fs.dirs.DocumentDir +
+      this.state.path.replace(/\//gi, "").replace("kakaotalkChats.txt", "");
+
+    RNFetchBlob.fs.writeFile(path, `${index}`, "utf8").then(() => {});
   }
+
+  _appStateHandler = state => {
+    if (state === "background") {
+      this._createBookmark();
+    }
+  };
 
   componentWillUnmount() {
     this._createBookmark();
+    AppState.removeEventListener("change", this._appStateHandler);
   }
 
   async componentDidMount() {
-    AppState.addEventListener("change", state => {
-      if (state === "background") {
-        this._createBookmark();
-      }
-    });
+    AppState.addEventListener("change", this._appStateHandler);
 
     const { path, messages, dates, images } = this.state;
     const folderPath = path.replace("kakaotalkChats.txt", "");
+
+    const bookmarkPath =
+      RNFetchBlob.fs.dirs.DocumentDir +
+      path.replace(/\//gi, "").replace("kakaotalkChats.txt", "");
+
+    try {
+      const index = await RNFetchBlob.fs.readFile(bookmarkPath, "utf8");
+
+      this.setState({
+        index: parseInt(index)
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     try {
       const textFile = await RNFS.readFile(path);
@@ -337,6 +360,7 @@ export default class extends React.Component {
 
   render() {
     const {
+      index,
       loading,
       messages,
       drawerOpen,
@@ -370,6 +394,7 @@ export default class extends React.Component {
             <Loader />
           ) : (
             <RecyclerviewList
+              initialScrollIndex={index}
               ref={this.listRef}
               style={{
                 flex: 1,

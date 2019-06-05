@@ -40,24 +40,19 @@ export default class extends React.Component {
                 RNFetchBlob.fs.dirs.DocumentDir + "password.txt";
 
               RNFetchBlob.fs.writeFile(writePath, password, "utf8").then(() => {
-                RNFetchBlob.fs.readFile(writePath, "utf8").then(data => {
-                  if (password === checkPassword) {
-                    ToastAndroid.show(
-                      `비밀번호가 설정되었습니다.`,
-                      ToastAndroid.SHORT
-                    );
-                    this.props.navigation.navigate("Setting");
-                  } else {
-                    ToastAndroid.show(
-                      `비밀번호가 다릅니다.`,
-                      ToastAndroid.SHORT
-                    );
+                if (password === checkPassword) {
+                  ToastAndroid.show(
+                    `비밀번호가 설정되었습니다.`,
+                    ToastAndroid.SHORT
+                  );
+                  this.props.navigation.navigate("Setting");
+                } else {
+                  ToastAndroid.show(`비밀번호가 다릅니다.`, ToastAndroid.SHORT);
 
-                    this.setState({
-                      password: ""
-                    });
-                  }
-                });
+                  this.setState({
+                    password: ""
+                  });
+                }
               });
             } else {
               if (checkPassword !== null) {
