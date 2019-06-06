@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Loader from "../../components/Loader";
 import Layout from "../../constants/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faEraser } from "@fortawesome/free-solid-svg-icons";
+import { faBackspace } from "@fortawesome/free-solid-svg-icons";
 import PassworResult from "../../components/PassworResult";
 
 const Container = styled.View`
@@ -54,7 +54,12 @@ const SettingPasswordPresenter = ({
               : "변경할 비밀번호를 입력해주세요."
             : "비밀번호를 한 번 더 입력해주세요."}
         </Text>
-        <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center"
+          }}
+        >
           <PassworResult password={password} />
         </View>
       </TopContainer>
@@ -127,7 +132,7 @@ const SettingPasswordPresenter = ({
         <TouchableOpacity onPress={() => handler(-1)}>
           <NumPad>
             <FontAwesomeIcon
-              icon={faEraser}
+              icon={faBackspace}
               size={20}
               style={{ marginTop: 6, marginLeft: "auto", marginRight: "auto" }}
             />

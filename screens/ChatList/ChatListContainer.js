@@ -67,7 +67,7 @@ export default class extends React.Component {
             stream.onData(chunk => {
               data += chunk;
 
-              console.log(textFilePath + chunk.toString().split("\n").length);
+              //console.log(textFilePath + chunk.toString().split("\n").length);
             });
             stream.onEnd(() => {
               const lines = data.toString().split("\n");

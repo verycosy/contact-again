@@ -3,14 +3,30 @@ import { headerStyles, chatHeaderStyles, ImageHeaderStyles } from "./config";
 
 import ChatListScreen from "../screens/ChatList";
 import SettingScreen from "../screens/Setting";
+import HelpScreen from "../screens/Help";
 import ChatScreen from "../screens/Chat";
 import GalleryScreen from "../screens/Gallery";
 import ImageDetailScreen from "../screens/ImageDetail";
 import SettingPasswordScreen from "../screens/SettingPassword";
 import SettingPathScreen from "../screens/SettingPath";
 
+import SplashScreen from "../components/SplashScreen";
+
 const ChatListStack = createStackNavigator(
   {
+    SplashScreen: {
+      screen: SplashScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    Help: {
+      screen: HelpScreen,
+      navigationOptions: {
+        title: "도움말",
+        ...headerStyles
+      }
+    },
     ChatList: {
       screen: ChatListScreen,
       navigationOptions: {
@@ -61,7 +77,7 @@ const ChatListStack = createStackNavigator(
   {
     headerMode: "screen",
     headerBackTitleVisible: false,
-    initialRouteName: "ChatList"
+    initialRouteName: "SplashScreen"
   }
 );
 

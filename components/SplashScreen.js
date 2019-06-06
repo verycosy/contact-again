@@ -1,15 +1,39 @@
-import React from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
+import Layout from "../constants/Layout";
 
 const Container = styled.View`
-  height: ${Layout.height - 70};
-  justify-content: center;
+  display: flex;
+  align-items: center;
 `;
 
-const Text = styled.Text``;
+const Logo = styled.Image`
+  width: ${Layout.width * 0.4};
+  height: ${Layout.width * 0.4};
+`;
 
-export default () => (
-  <Container>
-    <Text>아아아아</Text>
-  </Container>
-);
+const Tree = styled.Image`
+  width: ${Layout.width};
+  height: ${Layout.width};
+`;
+
+export default class extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.navigation.replace("ChatList");
+    }, 2000);
+  }
+
+  render() {
+    return (
+      <Container>
+        <Logo source={require("../assets/treelogo.png")} />
+        <Tree source={require("../assets/treetree.png")} />
+      </Container>
+    );
+  }
+}

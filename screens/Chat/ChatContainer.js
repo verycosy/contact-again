@@ -6,6 +6,7 @@ import { StatusBar, Text } from "react-native";
 import {
   TouchableOpacity,
   AppState,
+  BackHandler,
   TextInput,
   ToastAndroid
 } from "react-native";
@@ -198,6 +199,26 @@ export default class extends React.Component {
     RNFetchBlob.fs.writeFile(path, `${index}`, "utf8").then(() => {});
   }
 
+  _backHandler = () => {
+    const { drawerOpen } = this.state;
+    const searching = this.props.navigation.getParam("searching");
+
+    if (drawerOpen) {
+      this.setState({
+        drawerOpen: false
+      });
+      return true; // false가 아니라?;;
+    } else if (searching) {
+      this.props.navigation.setParams({ searching: false, searched: false });
+      this.setState({
+        searched: false
+      });
+      return true; // false가 아니라?;;
+    } else {
+      return false;
+    }
+  };
+
   _appStateHandler = state => {
     if (state === "background") {
       this._createBookmark();
@@ -207,10 +228,12 @@ export default class extends React.Component {
   componentWillUnmount() {
     this._createBookmark();
     AppState.removeEventListener("change", this._appStateHandler);
+    BackHandler.removeEventListener("hardwareBackPress", this._backHandler);
   }
 
   async componentDidMount() {
     AppState.addEventListener("change", this._appStateHandler);
+    BackHandler.addEventListener("hardwareBackPress", this._backHandler);
 
     const { path, messages, dates, images } = this.state;
     const folderPath = path.replace("kakaotalkChats.txt", "");

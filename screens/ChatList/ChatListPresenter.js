@@ -7,22 +7,32 @@ import ChatListTalk from "../../components/ChatList/ChatListTalk";
 
 const Container = styled.ScrollView``;
 
+const Text = styled.Text`
+  text-align: center;
+  padding: 10px;
+`;
+
 const ChatListPresenter = ({ loading, chatList }) =>
   loading ? (
     <Loader />
   ) : (
     <Container>
-      {chatList
-        ? chatList.map(chat => (
-            <ChatListTalk
-              key={UUID()}
-              path={chat.path}
-              name={chat.name}
-              lastTime={chat.lastTime}
-              lastMessage={chat.lastMessage}
-            />
-          ))
-        : null}
+      {chatList.length !== 0 ? (
+        chatList.map(chat => (
+          <ChatListTalk
+            key={UUID()}
+            path={chat.path}
+            name={chat.name}
+            lastTime={chat.lastTime}
+            lastMessage={chat.lastMessage}
+          />
+        ))
+      ) : (
+        <>
+          <Text>저장된 대화가 없습니다.</Text>
+          <Text>카카오톡에서 대화를 저장해주세요 !</Text>
+        </>
+      )}
     </Container>
   );
 

@@ -25,6 +25,15 @@ const SettingPresenter = ({ loading, navigation }) =>
   ) : (
     <>
       <TouchableOpacity
+        onPress={() => navigation.navigate({ routeName: "Help" })}
+      >
+        <View>
+          <SettingMenu>도움말</SettingMenu>
+          <SettingText>어떻게 쓰는 건가요?</SettingText>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
         onPress={() =>
           navigation.navigate({
             routeName: "SettingPassword",
@@ -37,15 +46,6 @@ const SettingPresenter = ({ loading, navigation }) =>
           <SettingText>실행시 비밀번호를 입력합니다.</SettingText>
         </View>
       </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => navigation.navigate({ routeName: "SettingPath" })}
-      >
-        <View>
-          <SettingMenu>대화폴더 경로</SettingMenu>
-          <SettingText>기본 대화폴더 경로를 변경합니다.</SettingText>
-        </View>
-      </TouchableOpacity>
     </>
   );
 
@@ -54,3 +54,14 @@ SettingPresenter.propTypes = {
 };
 
 export default SettingPresenter;
+
+/*
+<TouchableOpacity
+        onPress={() => navigation.navigate({ routeName: "SettingPath" })}
+      >
+        <View>
+          <SettingMenu>대화폴더 경로</SettingMenu>
+          <SettingText>기본 대화폴더 경로를 변경합니다.</SettingText>
+        </View>
+      </TouchableOpacity>
+*/
