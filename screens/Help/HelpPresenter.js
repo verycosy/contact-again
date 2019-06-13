@@ -1,15 +1,19 @@
 import React from "react";
+import { WebView } from "react-native";
 import styled from "styled-components";
-import PropTypes from "prop-types";
-import Loader from "../../components/Loader";
 
-const Text = styled.Text``;
+const Container = styled.View`
+  height: 240px;
+`;
 
-const HelpPresenter = ({ loading }) =>
-  !loading ? <Loader /> : <Text>도움말페이지</Text>;
-
-HelpPresenter.propTypes = {
-  loading: PropTypes.bool.isRequired
-};
+const HelpPresenter = () => (
+  <Container>
+    <WebView
+      javaScriptEnabled={true}
+      domStorageEnabled={true}
+      source={{ uri: "https://www.youtube.com/embed/0iayQ1xPsnc" }}
+    />
+  </Container>
+);
 
 export default HelpPresenter;

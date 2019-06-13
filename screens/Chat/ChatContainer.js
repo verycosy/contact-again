@@ -255,11 +255,20 @@ export default class extends React.Component {
     try {
       const textFile = await RNFS.readFile(path);
       const lines = textFile.toString().split("\n");
-      const reg = /^(20[0-9][0-9])년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일 (오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9])/;
+
+      let reg = /^(20[0-9][0-9])년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일 (오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9])/;
+      let lastLine = lines[lines.length - 2].split(reg);
+
+      const checkOld = lastLine.length === 8 ? false : true;
+
+      if (checkOld) {
+        reg = /^(오전|오후) ([0-9]|1[0-9]|2[0-3]):([0-5][0-9]), (20[0-9][0-9])년 ([1-9]|1[012])월 ([1-9]|[12][0-9]|3[0-1])일/;
+      }
 
       for (let i = 4; i < lines.length; i++) {
         if (lines[i] !== "" && lines[i] !== "\r") {
-          //NOTE: (8) ["", "2018", "9", "3", "오후", "8", "44", ", 회원님: 안녕하세요."]
+          //NOTE: reg1 (8) ["", "2018", "9", "3", "오후", "8", "44", ", 회원님: 안녕하세요."]
+          // reg2 (8) ["", "오후", "시", "분", "년, "월", "일", "회원님: 안녕하세요."]
 
           const currentLine = lines[i].split(reg);
 
@@ -270,9 +279,9 @@ export default class extends React.Component {
 
             const who = currentLine[7].substring(2, colonIndex - 1);
             let content = currentLine[7].substring(colonIndex + 2);
-            let date = `${currentLine[1]}년 ${currentLine[2]}월 ${
-              currentLine[3]
-            }일`;
+            let date = !checkOld
+              ? `${currentLine[1]}년 ${currentLine[2]}월 ${currentLine[3]}일`
+              : `${currentLine[4]}년 ${currentLine[5]}월 ${currentLine[6]}일`;
 
             let type; //NOTE: 0 그녀 / 1 나 / 2 시스템
 
@@ -292,7 +301,9 @@ export default class extends React.Component {
               id: messages.length,
               who,
               date,
-              time: `${currentLine[4]} ${currentLine[5]}:${currentLine[6]}`,
+              time: !checkOld
+                ? `${currentLine[4]} ${currentLine[5]}:${currentLine[6]}`
+                : `${currentLine[1]} ${currentLine[2]}:${currentLine[3]}`,
               type,
               content
             };
